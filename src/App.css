@@ -1,0 +1,53 @@
+body {
+  background-image: url(../public/img/original.gif);
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: top;
+  color: white;
+}
+
+h1 {
+  font-size: 10rem;
+}
+
+h2 {
+  font-size: 3.3rem;
+}
+
+/* .App {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+} */
+
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: -4rem;
+  margin-bottom: 1rem;
+}
+
+#buddha {
+  background: none;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 50;
+}
+
+.info {
+  background-color: white;
+}
