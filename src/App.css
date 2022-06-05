@@ -1,9 +1,15 @@
 body {
-  background-image: url(../public/img/original.gif);
+  background-image: url(./img/original.gif);
   background-attachment: fixed;
   background-size: cover;
   background-position: top;
   color: white;
+  /* cursor: url(../public/img/b.ico), pointer; */
+  /* cursor: pointer; */
+}
+
+h2, h3, h4 {
+  cursor: pointer;
 }
 
 h1 {
@@ -13,13 +19,6 @@ h1 {
 h2 {
   font-size: 3.3rem;
 }
-
-/* .App {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-} */
 
 .page {
   height: 100vh;
@@ -38,16 +37,15 @@ h2 {
   margin-bottom: 1rem;
 }
 
-#buddha {
-  background: none;
-  width: 100px;
-  height: 100px;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  z-index: 50;
+#dev, #prod, #greek {
+  height: 20vh;
 }
 
-.info {
-  background-color: white;
+#dev:hover, #prod:hover, #greek:hover {
+  text-decoration: line-through;
+  background-image: url('https://thumbs.gfycat.com/ImpassionedTameBullfrog-max-1mb.gif');
+  background-repeat: no-repeat;
+  background-position: top;
+  background-size: contain;
 }
+
