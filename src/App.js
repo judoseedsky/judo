@@ -33,7 +33,7 @@ function App() {
 
   return (
     <div className="App">
-      <div className='page'>
+      <div className='judo'>
         <h1>Judo بذرة Sky</h1>
       </div>
 
