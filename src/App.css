@@ -13,7 +13,9 @@ h2, h3, h4 {
 }
 
 h1 {
-  font-size: 6rem;
+  font-size: 3rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 h2 {
@@ -23,7 +25,7 @@ h2 {
 .judo {
   height: 100vh;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -43,7 +45,7 @@ h2 {
 
 #dev:hover, #prod:hover, #greek:hover {
   text-decoration: line-through;
-  background-image: url('https://thumbs.gfycat.com/ImpassionedTameBullfrog-max-1mb.gif');
+  background-image: url('../src/img/spinningbuddha.gif');
   background-repeat: no-repeat;
   background-position: top;
   background-size: contain;
