@@ -45,7 +45,7 @@ h2 {
 
 #dev:hover, #prod:hover, #greek:hover {
   text-decoration: line-through;
-  background-image: url('../src/img/spinningbuddha.gif');
+  background-image: url('./img/spinningbuddha.gif');
   background-repeat: no-repeat;
   background-position: top;
   background-size: contain;
