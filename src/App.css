@@ -1,9 +1,22 @@
+@font-face {
+  font-family: 'Apercu';
+  src: url('/fonts/Apercu Pro Bold.otf') format('opentype');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'Raisonne';
+  src: url('/fonts/DemiBold.ttf') format('truetype');
+  font-weight: 600;
+}
+
 body {
   background-image: url(./img/original.gif);
   background-attachment: fixed;
   background-size: cover;
   background-position: top;
   color: white;
+  font-family: 'Raisonne', 'Apercu', sans-serif;
   /* cursor: url(../public/img/b.ico), pointer; */
   /* cursor: pointer; */
 }
