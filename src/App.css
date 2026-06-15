@@ -16,7 +16,7 @@ body {
   background-size: cover;
   background-position: top;
   color: white;
-  font-family: 'Raisonne', 'Apercu', sans-serif;
+  font-family: 'Raisonne', sans-serif;
   /* cursor: url(../public/img/b.ico), pointer; */
   /* cursor: pointer; */
 }
