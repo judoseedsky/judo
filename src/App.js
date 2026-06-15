@@ -15,7 +15,7 @@ function Home() {
       </div>
 
       <div className='details'>
-        <h2 id='dev' onClick={() => navigate('/software-engineer')}>软件工程师</h2>
+        <h2 id='dev' onClick={() => navigate('/software-engineer')}>소프트웨어 엔지니어</h2>
         <br/>
         <br/>
         <h2 id='prod'>♪♬Humm♪♬</h2>
