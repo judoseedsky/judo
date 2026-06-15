@@ -57,3 +57,36 @@ h2 {
   }
 }
 
+.page-content {
+  min-height: 100vh;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.back-btn {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid white;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.lorem {
+  max-width: 800px;
+  font-size: 1.2rem;
+  line-height: 2;
+  text-align: center;
+  padding: 2rem;
+}
+

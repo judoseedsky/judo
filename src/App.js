@@ -2,34 +2,11 @@
 import './App.css';
 // import brahma from "./img/brahma.png";
 import React from "react";
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import SoftwareEngineer from './SoftwareEngineer';
 
-function App() {
-
-  // const style = {
-  //   textDecoration: 'none',
-  //   ":hover": {
-  //     textDecoration: 'line-through'
-  //   }
-  // }
-
-  // const devStyles = {
-  //   textDecoration: 'line-through',
-  //   backgroundImage: `url(${brahma})`,
-  //   backgroundSize: "contain",
-  //   backgroundRepeat: 'no-repeat',
-  //   backgroundPosition: 'center',
-  //   backgroundPosition: 'absolute',
-  //   height: '100vh',
-  //   width: '50vw'
-  // }
-
-  // const [devStyle, setDevStyle] = React.useState(style);
-
-  // const handleDevClick = () => {
-  //   devStyle.textDecoration === style.textDecoration ? setDevStyle(devStyles) : setDevStyle(style)
-
-  // }
-
+function Home() {
+  const navigate = useNavigate();
 
   return (
     <div className="App">
@@ -38,7 +15,7 @@ function App() {
       </div>
 
       <div className='details'>
-        <h2 id='dev'>Software Engineer</h2>
+        <h2 id='dev' onClick={() => navigate('/software-engineer')}>Software Engineer</h2>
         <br/>
         <br/>
         <h2 id='prod'>♪♬Humm♪♬</h2>
@@ -48,8 +25,18 @@ function App() {
         <br/>
         <br/>
       </div>
-      {/* <img id='buddha' src='https://thumbs.gfycat.com/ImpassionedTameBullfrog-max-1mb.gif' alt='buddha'></img> */}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/software-engineer" element={<SoftwareEngineer />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
