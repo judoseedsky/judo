@@ -38,10 +38,10 @@ function App() {
       </div>
 
       <div className='details'>
-        <h2 id='dev'>Software Dev</h2>
+        <h2 id='dev'>Software Engineer</h2>
         <br/>
         <br/>
-        <h2 id='prod'>♪♬Producer♪♬</h2>
+        <h2 id='prod'>♪♬Humm♪♬</h2>
         <br/>
         <br/>
         <h2 id='greek'>νομοθέτης</h2>
