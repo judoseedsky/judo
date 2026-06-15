@@ -11,7 +11,7 @@ function Home() {
   return (
     <div className="App">
       <div className='judo'>
-        <h1>Judo بذرة Sky</h1>
+        <h1>JUDO گل‌ها SKY ☆</h1>
       </div>
 
       <div className='details'>
