@@ -4,6 +4,8 @@ import './App.css';
 import React from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import SoftwareEngineer from './SoftwareEngineer';
+import Nomothetes from './Nomothetes';
+import HymnOfThePearl from './HymnOfThePearl';
 
 function Home() {
   const navigate = useNavigate();
@@ -21,7 +23,7 @@ function Home() {
         <h2 id='prod'>♪♬Humm♪♬</h2>
         <br/>
         <br/>
-        <h2 id='greek'>νομοθέτης</h2>
+        <h2 id='greek' onClick={() => navigate('/nomothetes')}>νομοθέτης</h2>
         <br/>
         <br/>
       </div>
@@ -35,6 +37,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/software-engineer" element={<SoftwareEngineer />} />
+        <Route path="/nomothetes" element={<Nomothetes />} />
+        <Route path="/hymn-of-the-pearl" element={<HymnOfThePearl />} />
       </Routes>
     </BrowserRouter>
   );

@@ -10,6 +10,7 @@ function SoftwareEngineer() {
         <button className="back-btn" onClick={() => navigate('/')}>
           &larr; Back
         </button>
+        <h1>소프트웨어 엔지니어</h1>
         <p className="lorem">
           Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum.
           Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum.

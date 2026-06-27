@@ -1,12 +1,12 @@
 @font-face {
   font-family: 'Apercu';
-  src: url('/fonts/Apercu Pro Bold.otf') format('opentype');
+  src: url('./fonts/Apercu Pro Bold.otf') format('opentype');
   font-weight: bold;
 }
 
 @font-face {
   font-family: 'Raisonne';
-  src: url('/fonts/DemiBold.ttf') format('truetype');
+  src: url('./fonts/DemiBold.ttf') format('truetype');
   font-weight: 600;
 }
 
@@ -102,5 +102,121 @@ h2 {
   line-height: 2;
   text-align: center;
   padding: 2rem;
+}
+
+.book-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.book-list li {
+  font-size: 1.5rem;
+  padding: 1rem 0;
+  cursor: pointer;
+}
+
+.book-list li:hover {
+  text-decoration: underline;
+}
+
+.hymn-page {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hymn-subtitle {
+  font-size: 1.2rem;
+  opacity: 0.8;
+  margin-top: -1rem;
+  margin-bottom: 2rem;
+}
+
+.hymn-text {
+  text-align: left;
+  line-height: 1.8;
+  padding: 2rem;
+  background: rgba(10, 20, 40, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 1rem;
+}
+
+.hymn-text h2 {
+  text-align: center;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  cursor: default;
+}
+
+.hymn-text h2:hover {
+  text-decoration: none;
+  background: none;
+}
+
+.hymn-text p {
+  margin-bottom: 1.5rem;
+  text-indent: 2rem;
+}
+
+.hymn-text blockquote {
+  border-left: 3px solid rgba(255, 255, 255, 0.5);
+  margin: 2rem 1rem;
+  padding-left: 1.5rem;
+  font-style: italic;
+}
+
+.hymn-text blockquote p {
+  text-indent: 0;
+}
+
+.hymn-ending {
+  text-align: center;
+  margin-top: 3rem;
+  text-indent: 0 !important;
+}
+
+.hymn-attribution {
+  text-align: center;
+  margin-top: 3rem;
+  opacity: 0.7;
+  font-size: 0.9rem;
+  text-indent: 0 !important;
+}
+
+.chapter-nav {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: 1px solid white;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  z-index: 100;
+  font-family: inherit;
+}
+
+.chapter-nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 0.25rem 0.4rem;
+  transition: background 0.2s;
+  border-radius: 2px;
+}
+
+.chapter-nav a:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-dot {
+  opacity: 0.6;
 }
 
