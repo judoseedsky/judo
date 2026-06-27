@@ -220,3 +220,44 @@ h2 {
   opacity: 0.6;
 }
 
+.page-transition {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.buddha-expand {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  transform: translateX(-50%);
+  background-image: url('./img/spinningbuddha.gif');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: expandBuddha 1.4s ease-in-out forwards;
+}
+
+@keyframes expandBuddha {
+  0% {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+  35% {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+  70% {
+    transform: translateX(-50%) scale(10);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) scale(25);
+    opacity: 0;
+  }
+}
+

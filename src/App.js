@@ -1,7 +1,7 @@
 /* eslint-disable no-dupe-keys */
 import './App.css';
 // import brahma from "./img/brahma.png";
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import SoftwareEngineer from './SoftwareEngineer';
 import Nomothetes from './Nomothetes';
@@ -9,21 +9,43 @@ import HymnOfThePearl from './HymnOfThePearl';
 
 function Home() {
   const navigate = useNavigate();
+  const [transitioning, setTransitioning] = useState(false);
+  const [clickPos, setClickPos] = useState({ x: 0, y: 0 });
+
+  const handleNavigation = (e, path) => {
+    const rect = e.target.getBoundingClientRect();
+    setClickPos({
+      x: rect.left + rect.width / 2,
+      y: rect.top
+    });
+    setTransitioning(true);
+    setTimeout(() => {
+      navigate(path);
+    }, 1300);
+  };
 
   return (
     <div className="App">
+      {transitioning && (
+        <div className="page-transition">
+          <div
+            className="buddha-expand"
+            style={{ left: clickPos.x, top: clickPos.y }}
+          ></div>
+        </div>
+      )}
       <div className='judo'>
         <h1>Judo گل‌ها Sky</h1>
       </div>
 
       <div className='details'>
-        <h2 id='dev' onClick={() => navigate('/software-engineer')}>소프트웨어 엔지니어</h2>
+        <h2 id='dev' onClick={(e) => handleNavigation(e, '/software-engineer')}>소프트웨어 엔지니어</h2>
         <br/>
         <br/>
         <h2 id='prod'>♪♬Humm♪♬</h2>
         <br/>
         <br/>
-        <h2 id='greek' onClick={() => navigate('/nomothetes')}>νομοθέτης</h2>
+        <h2 id='greek' onClick={(e) => handleNavigation(e, '/nomothetes')}>νομοθέτης</h2>
         <br/>
         <br/>
       </div>
