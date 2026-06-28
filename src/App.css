@@ -90,6 +90,7 @@ h2 {
   cursor: pointer;
   border-radius: 4px;
   font-family: inherit;
+  z-index: 9999;
 }
 
 .back-btn:hover {
@@ -122,8 +123,11 @@ h2 {
 }
 
 .hymn-page {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .hymn-subtitle {
@@ -136,48 +140,50 @@ h2 {
 .scroll-container {
   position: relative;
   margin-top: 1rem;
+  width: 100%;
 }
 
 .scroll-top, .scroll-bottom {
-  height: 35px;
+  height: 30px;
   background: linear-gradient(to bottom,
-    #2a1a05 0%,
-    #5c3d10 8%,
-    #8b5a1b 20%,
-    #c9922f 35%,
-    #e8b84a 45%,
-    #f5cc60 50%,
-    #e8b84a 55%,
-    #c9922f 65%,
-    #8b5a1b 80%,
-    #5c3d10 92%,
-    #2a1a05 100%
+    #8b7355 0%,
+    #c4a882 10%,
+    #e8d4b8 25%,
+    #f5ead8 40%,
+    #f4e4c1 50%,
+    #e8d4b0 60%,
+    #d4c4a0 75%,
+    #b8a080 90%,
+    #9a8060 100%
   );
   box-shadow:
-    0 4px 12px rgba(0,0,0,0.6),
-    inset 0 2px 4px rgba(255,255,255,0.2);
+    0 4px 12px rgba(0,0,0,0.4),
+    inset 0 2px 6px rgba(255,255,255,0.4),
+    inset 0 -2px 6px rgba(0,0,0,0.15);
   position: relative;
   z-index: 2;
 }
 
 .scroll-top {
-  border-radius: 12px 12px 0 0;
-  margin-bottom: -5px;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  margin-bottom: -2px;
 }
 
 .scroll-bottom {
-  border-radius: 0 0 12px 12px;
-  margin-top: -5px;
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  margin-top: -2px;
 }
 
 .hymn-text {
   text-align: left;
-  line-height: 1.8;
-  padding: 4rem 3rem;
+  line-height: 1.9;
+  padding: 4rem 3.5rem;
   background: #f4e4c1;
   color: #2c1810;
   position: relative;
   box-shadow: inset 0 0 80px rgba(139, 90, 43, 0.15);
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 1.1rem;
 }
 
 .scroll-title {
@@ -269,10 +275,12 @@ h2 {
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   padding: 0.5rem 1rem;
-  border-radius: 4px;
-  border: 1px solid white;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   display: flex;
   gap: 0.75rem;
   align-items: center;
@@ -295,6 +303,33 @@ h2 {
 
 .nav-dot {
   opacity: 0.6;
+}
+
+.chapter-nav.expanded {
+  gap: 0;
+}
+
+.chapter-nav.expanded a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.chapter-nav.expanded a:last-child {
+  border-right: none;
+}
+
+.ch-num {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.ch-name {
+  font-size: 0.7rem;
+  opacity: 0.8;
+  margin-top: 0.2rem;
 }
 
 .page-transition {

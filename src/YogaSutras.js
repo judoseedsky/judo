@@ -11,14 +11,11 @@ function YogaSutras() {
           &larr; Back
         </button>
 
-        <nav className="chapter-nav">
-          <a href="#ch1">I</a>
-          <span className="nav-dot">·</span>
-          <a href="#ch2">II</a>
-          <span className="nav-dot">·</span>
-          <a href="#ch3">III</a>
-          <span className="nav-dot">·</span>
-          <a href="#ch4">IV</a>
+        <nav className="chapter-nav expanded">
+          <a href="#ch1"><span className="ch-num">I</span><span className="ch-name">Samadhi</span></a>
+          <a href="#ch2"><span className="ch-num">II</span><span className="ch-name">Sadhana</span></a>
+          <a href="#ch3"><span className="ch-num">III</span><span className="ch-name">Vibhuti</span></a>
+          <a href="#ch4"><span className="ch-num">IV</span><span className="ch-name">Kaivalya</span></a>
         </nav>
 
         <div className="scroll-container">
