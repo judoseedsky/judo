@@ -11,9 +11,6 @@ function YogaSutras() {
           &larr; Back
         </button>
 
-        <h1>The Yoga Sutras</h1>
-        <p className="hymn-subtitle">Patanjali · Translation by Swami Vivekananda</p>
-
         <nav className="chapter-nav">
           <a href="#ch1">I</a>
           <span className="nav-dot">·</span>
@@ -24,7 +21,12 @@ function YogaSutras() {
           <a href="#ch4">IV</a>
         </nav>
 
-        <div className="hymn-text sutra-text">
+        <div className="scroll-container">
+          <div className="scroll-top"></div>
+          <div className="hymn-text sutra-text">
+            <h1 className="scroll-title">The Yoga Sutras</h1>
+          <p className="scroll-subtitle">Patanjali · Translation by Swami Vivekananda</p>
+
           <h2 id="ch1">Chapter I · Samadhi Pada</h2>
           <p className="chapter-subtitle">Concentration: Its Spiritual Uses</p>
 
@@ -245,7 +247,9 @@ function YogaSutras() {
 
           <p className="hymn-ending"><em>Thus ends the Yoga Sutras of Patanjali.</em></p>
 
-          <p className="hymn-attribution">Translation by Swami Vivekananda (1896)<br/>From Raja Yoga</p>
+            <p className="hymn-attribution">Translation by Swami Vivekananda (1896)<br/>From Raja Yoga</p>
+          </div>
+          <div className="scroll-bottom"></div>
         </div>
       </div>
     </div>

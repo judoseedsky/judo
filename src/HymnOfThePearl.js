@@ -11,9 +11,6 @@ function HymnOfThePearl() {
           &larr; Back
         </button>
 
-        <h1>The Hymn of the Pearl</h1>
-        <p className="hymn-subtitle">Judas Thomas, the Apostle</p>
-
         <nav className="chapter-nav">
           <a href="#ch1">I</a>
           <span className="nav-dot">·</span>
@@ -24,7 +21,12 @@ function HymnOfThePearl() {
           <a href="#ch4">IV</a>
         </nav>
 
-        <div className="hymn-text">
+        <div className="scroll-container">
+          <div className="scroll-top"></div>
+          <div className="hymn-text">
+            <h1 className="scroll-title">The Hymn of the Pearl</h1>
+          <p className="scroll-subtitle">Judas Thomas, the Apostle</p>
+
           <h2 id="ch1">Chapter 1</h2>
 
           <p>When I was a young child, living with my Parents in the palace of the Kingdom in our native land, I possessed everything I could imagine wanting—content with its luxury and riches. I was nurtured in the House of Life until one day my Parents summoned me to send me on a journey from our homeland in the East to a distant land. My Parents helped equip me for this journey, giving me treasure from their store. They put together a pack which was large, but also very light so that I could carry it easily without assistance. In it were many precious elements: gold from Beth-'Ellaye, silver from great treasures of Gazak, rubies from India, agates from Beth-Kushan, and they girded me with diamonds that can pulverize iron, and gave me food as well for my journey and an identification affirming my citizenship in the Land of the East—the source of Light. Then they removed from me my Garment of Light, which they had woven through their love, and the Scarlet Cloak, which had been made for my rank and stature as a child of the Rulers.</p>
@@ -63,7 +65,9 @@ function HymnOfThePearl() {
 
           <p className="hymn-ending"><em>The Hymn of Judas Thomas, the Apostle, which he spoke in prison, is ended.</em></p>
 
-          <p className="hymn-attribution">Translation by Lynn Bauman<br/>From the Acts of Thomas</p>
+            <p className="hymn-attribution">Translation by Lynn Bauman<br/>From the Acts of Thomas</p>
+          </div>
+          <div className="scroll-bottom"></div>
         </div>
       </div>
     </div>
