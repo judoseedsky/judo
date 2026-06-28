@@ -43,6 +43,22 @@ h2 {
   align-items: center;
 }
 
+.tagline {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-top: -0.5rem;
+  letter-spacing: 0.05rem;
+}
+
+.owl-fixed {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 150px;
+  height: auto;
+  z-index: 50;
+}
+
 .details {
   display: flex;
   flex-direction: column;

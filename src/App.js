@@ -37,16 +37,17 @@ function Home() {
       )}
       <div className='judo'>
         <h1>Judo گل‌ها Sky</h1>
+        <p className='tagline'>Programmer · νομοθέτης · Artist</p>
       </div>
 
       <div className='details'>
-        <h2 id='dev' onClick={(e) => handleNavigation(e, '/software-engineer')}>소프트웨어 엔지니어</h2>
+        <h2 id='dev' onClick={(e) => handleNavigation(e, '/software-engineer')}>About</h2>
         <br/>
         <br/>
         <h2 id='prod'>♪♬Humm♪♬</h2>
         <br/>
         <br/>
-        <h2 id='greek' onClick={(e) => handleNavigation(e, '/nomothetes')}>νομοθέτης</h2>
+        <h2 id='greek' onClick={(e) => handleNavigation(e, '/nomothetes')}>Texts</h2>
         <br/>
         <br/>
       </div>
