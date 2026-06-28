@@ -187,6 +187,29 @@ h2 {
   text-indent: 0 !important;
 }
 
+.chapter-subtitle {
+  text-align: center;
+  font-style: italic;
+  opacity: 0.8;
+  margin-top: -0.5rem;
+  margin-bottom: 2rem;
+}
+
+.sutras {
+  padding-left: 2.5rem;
+  margin: 0;
+}
+
+.sutras li {
+  margin-bottom: 1rem;
+  padding-left: 0.5rem;
+}
+
+.sutras li::marker {
+  font-weight: bold;
+  opacity: 0.7;
+}
+
 .chapter-nav {
   position: fixed;
   bottom: 2rem;

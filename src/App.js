@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import SoftwareEngineer from './SoftwareEngineer';
 import Nomothetes from './Nomothetes';
 import HymnOfThePearl from './HymnOfThePearl';
+import YogaSutras from './YogaSutras';
 
 function Home() {
   const navigate = useNavigate();
@@ -61,6 +62,7 @@ function App() {
         <Route path="/software-engineer" element={<SoftwareEngineer />} />
         <Route path="/nomothetes" element={<Nomothetes />} />
         <Route path="/hymn-of-the-pearl" element={<HymnOfThePearl />} />
+        <Route path="/yoga-sutras" element={<YogaSutras />} />
       </Routes>
     </BrowserRouter>
   );

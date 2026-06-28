@@ -13,6 +13,7 @@ function Nomothetes() {
         <h1>νομοθέτης</h1>
         <ul className="book-list">
           <li onClick={() => navigate('/hymn-of-the-pearl')}>Hymn of The Pearl</li>
+          <li onClick={() => navigate('/yoga-sutras')}>Yoga Sutras</li>
         </ul>
       </div>
     </div>
