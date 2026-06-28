@@ -13,20 +13,7 @@ function SoftwareEngineer() {
         </button>
         <h1>About</h1>
         <img src={owl} alt="Owl" className="owl-fixed" />
-        <p className="lorem">
-          Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum.
-          Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum.
-          Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum.
-          Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum.
-          Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum.
-          Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum.
-          Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum.
-          Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum.
-          Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum.
-          Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum.
-          Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum.
-          Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum. Lorem ipsum dosum.
-        </p>
+        <p className="lorem">ummm...hi!</p>
       </div>
     </div>
   );
