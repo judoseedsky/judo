@@ -41,13 +41,13 @@ function Home() {
       </div>
 
       <div className='details'>
-        <h2 id='dev' onClick={(e) => handleNavigation(e, '/software-engineer')}>About</h2>
+        <h2 id='greek' onClick={(e) => handleNavigation(e, '/nomothetes')}>Texts</h2>
         <br/>
         <br/>
         <h2 id='prod'>♪♬Humm♪♬</h2>
         <br/>
         <br/>
-        <h2 id='greek' onClick={(e) => handleNavigation(e, '/nomothetes')}>Texts</h2>
+        <h2 id='dev' onClick={(e) => handleNavigation(e, '/software-engineer')}>About</h2>
         <br/>
         <br/>
       </div>
