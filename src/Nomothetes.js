@@ -10,7 +10,7 @@ function Nomothetes() {
         <button className="back-btn" onClick={() => navigate('/')}>
           &larr; Back
         </button>
-        <h1>νομοθέτης</h1>
+        <h1>Texts</h1>
         <ul className="book-list">
           <li onClick={() => navigate('/hymn-of-the-pearl')}>Hymn of The Pearl</li>
           <li onClick={() => navigate('/yoga-sutras')}>Yoga Sutras</li>
