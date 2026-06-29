@@ -13,7 +13,8 @@ function SoftwareEngineer() {
         </button>
         <h1>About</h1>
         <img src={owl} alt="Owl" className="owl-fixed" />
-        <p className="lorem">ummm...hi!</p>
+        <p className="lorem">The Tao that can be told is not the eternal Tao.<br/>The name that can be named is not the eternal name.</p>
+        <p className="lorem">judoseedsky@gmail.com</p>
       </div>
     </div>
   );
