@@ -14,6 +14,7 @@ function Nomothetes() {
         <ul className="book-list">
           <li onClick={() => navigate('/hymn-of-the-pearl')}>Hymn of The Pearl</li>
           <li onClick={() => navigate('/yoga-sutras')}>Yoga Sutras</li>
+          <li onClick={() => navigate('/ornament-of-stainless-light')}>Ornament of Stainless Light</li>
         </ul>
       </div>
     </div>

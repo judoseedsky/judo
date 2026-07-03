@@ -1,0 +1,68 @@
+[
+  {
+    "key": "front_matter",
+    "title": "Front Matter",
+    "file": "ornament_front_matter.txt",
+    "chapters": []
+  },
+  {
+    "key": "introduction",
+    "title": "Introduction",
+    "file": "ornament_introduction.txt",
+    "chapters": []
+  },
+  {
+    "key": "part1_external",
+    "title": "Part 1: The External World",
+    "file": "ornament_part1_external.txt",
+    "chapters": []
+  },
+  {
+    "key": "part2_inner",
+    "title": "Part 2: The Inner World of Sentient Beings",
+    "file": "ornament_part2_inner.txt",
+    "chapters": []
+  },
+  {
+    "key": "part3_initiations",
+    "title": "Part 3: Initiations",
+    "file": "ornament_part3_initiations.txt",
+    "chapters": []
+  },
+  {
+    "key": "part4_sadhana",
+    "title": "Part 4: Sādhana - Methods of Accomplishment",
+    "file": "ornament_part4_sadhana.txt",
+    "chapters": []
+  },
+  {
+    "key": "part5_gnosis",
+    "title": "Part 5: Gnosis - The Completion Stage",
+    "file": "ornament_part5_gnosis.txt",
+    "chapters": []
+  },
+  {
+    "key": "appendixes",
+    "title": "Appendixes",
+    "file": "ornament_appendixes.txt",
+    "chapters": []
+  },
+  {
+    "key": "notes",
+    "title": "Notes",
+    "file": "ornament_notes.txt",
+    "chapters": []
+  },
+  {
+    "key": "glossary",
+    "title": "Glossary",
+    "file": "ornament_glossary.txt",
+    "chapters": []
+  },
+  {
+    "key": "bibliography",
+    "title": "Bibliography",
+    "file": "ornament_bibliography.txt",
+    "chapters": []
+  }
+]

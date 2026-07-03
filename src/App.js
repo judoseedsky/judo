@@ -7,6 +7,7 @@ import SoftwareEngineer from './SoftwareEngineer';
 import Nomothetes from './Nomothetes';
 import HymnOfThePearl from './HymnOfThePearl';
 import YogaSutras from './YogaSutras';
+import OrnamentOfStainlessLight from './OrnamentOfStainlessLight';
 
 function Home() {
   const navigate = useNavigate();
@@ -64,6 +65,7 @@ function App() {
         <Route path="/nomothetes" element={<Nomothetes />} />
         <Route path="/hymn-of-the-pearl" element={<HymnOfThePearl />} />
         <Route path="/yoga-sutras" element={<YogaSutras />} />
+        <Route path="/ornament-of-stainless-light" element={<OrnamentOfStainlessLight />} />
       </Routes>
     </BrowserRouter>
   );

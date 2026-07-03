@@ -1,8 +1,42 @@
 import './App.css';
 import { useNavigate } from 'react-router-dom';
+import { useState, useRef } from 'react';
 
 function YogaSutras() {
   const navigate = useNavigate();
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const contentRef = useRef(null);
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    if (query.length < 2 || !contentRef.current) {
+      setSearchResults([]);
+      return;
+    }
+    const textContent = contentRef.current.innerText;
+    const regex = new RegExp(query, 'gi');
+    const matches = [];
+    let match;
+    while ((match = regex.exec(textContent)) !== null) {
+      const start = Math.max(0, match.index - 40);
+      const end = Math.min(textContent.length, match.index + query.length + 40);
+      matches.push({
+        text: textContent.slice(start, end),
+        index: match.index
+      });
+      if (matches.length >= 20) break;
+    }
+    setSearchResults(matches);
+  };
+
+  const navigateToResult = (result) => {
+    setSearchOpen(false);
+    if (window.find) {
+      window.find(searchQuery, false, false, true);
+    }
+  };
 
   return (
     <div className="App">
@@ -16,11 +50,21 @@ function YogaSutras() {
           <a href="#ch2"><span className="ch-num">II</span><span className="ch-name">Sadhana</span></a>
           <a href="#ch3"><span className="ch-num">III</span><span className="ch-name">Vibhuti</span></a>
           <a href="#ch4"><span className="ch-num">IV</span><span className="ch-name">Kaivalya</span></a>
+          <button
+            className="nav-search-btn"
+            onClick={() => setSearchOpen(true)}
+            aria-label="Search"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+          </button>
         </nav>
 
         <div className="scroll-container">
           <div className="scroll-top"></div>
-          <div className="hymn-text sutra-text">
+          <div className="hymn-text sutra-text" ref={contentRef}>
             <h1 className="scroll-title">The Yoga Sutras</h1>
           <p className="scroll-subtitle">Patanjali · Translation by Swami Vivekananda</p>
 
@@ -248,6 +292,55 @@ function YogaSutras() {
           </div>
           <div className="scroll-bottom"></div>
         </div>
+
+        {/* Search Overlay */}
+        {searchOpen && (
+          <div className="search-overlay">
+            <div className="search-panel">
+              <div className="search-header">
+                <input
+                  type="text"
+                  placeholder="Search within text..."
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  autoFocus
+                />
+                <button
+                  className="search-close"
+                  onClick={() => {
+                    setSearchOpen(false);
+                    setSearchQuery('');
+                    setSearchResults([]);
+                  }}
+                >
+                  &times;
+                </button>
+              </div>
+              <div className="search-results-panel">
+                {searchQuery.length < 2 ? (
+                  <p className="search-hint">Type at least 2 characters to search</p>
+                ) : searchResults.length === 0 ? (
+                  <p className="search-hint">No results found</p>
+                ) : (
+                  <>
+                    <p className="search-count">{searchResults.length} result{searchResults.length !== 1 ? 's' : ''} found</p>
+                    {searchResults.map((result, i) => (
+                      <div
+                        key={i}
+                        className="search-result-item"
+                        onClick={() => navigateToResult(result)}
+                      >
+                        <span className="search-result-text">
+                          ...{result.text.replace(/\n/g, ' ')}...
+                        </span>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -10,6 +10,7 @@
     "react-dom": "^18.1.0",
     "react-router-dom": "^7.17.0",
     "react-scripts": "5.0.1",
+    "sharp": "^0.35.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -35,5 +36,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@imgly/background-removal-node": "^1.4.5",
+    "jimp": "^1.6.1"
   }
 }
