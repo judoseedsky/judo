@@ -491,7 +491,7 @@ function OrnamentOfStainlessLight() {
           &larr; Back
         </button>
 
-        <nav className="chapter-nav expanded">
+        <nav className="chapter-nav expanded ornament-nav">
           {sections.map(section => (
             <button
               key={section.id}

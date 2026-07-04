@@ -651,9 +651,9 @@ h2 {
   border-right: none;
 }
 
-/* Mobile horizontal scrolling for chapter nav */
+/* Mobile horizontal scrolling for Ornament chapter nav only */
 @media only screen and (max-width: 600px) {
-  .chapter-nav {
+  .chapter-nav.ornament-nav {
     left: 1rem;
     right: 1rem;
     transform: none;
@@ -667,17 +667,17 @@ h2 {
     -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
   }
 
-  .chapter-nav::-webkit-scrollbar {
+  .chapter-nav.ornament-nav::-webkit-scrollbar {
     display: none; /* Chrome/Safari */
   }
 
-  .chapter-nav.expanded a,
-  .chapter-nav.expanded .nav-section-btn {
+  .chapter-nav.ornament-nav.expanded a,
+  .chapter-nav.ornament-nav.expanded .nav-section-btn {
     padding: 0.4rem 0.6rem;
     flex-shrink: 0;
   }
 
-  .chapter-nav.expanded .ch-name {
+  .chapter-nav.ornament-nav.expanded .ch-name {
     font-size: 0.65rem;
     white-space: nowrap;
   }
