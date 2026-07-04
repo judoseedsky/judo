@@ -34,6 +34,8 @@ function OrnamentOfStainlessLight() {
   const [glossaryLookup, setGlossaryLookup] = useState({});
   const [searchOpen, setSearchOpen] = useState(false);
   const scrollContainerRef = useRef(null);
+  const navRef = useRef(null);
+  const [navScrollState, setNavScrollState] = useState({ canScrollLeft: false, canScrollRight: false });
 
   const toggleNoteSection = (idx) => {
     setExpandedNoteSections(prev => ({
@@ -41,6 +43,28 @@ function OrnamentOfStainlessLight() {
       [idx]: !prev[idx]
     }));
   };
+
+  // Check nav scroll state for fade indicators
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+
+    const checkScroll = () => {
+      const canScrollLeft = nav.scrollLeft > 0;
+      const canScrollRight = nav.scrollLeft < nav.scrollWidth - nav.clientWidth - 1;
+      setNavScrollState({ canScrollLeft, canScrollRight });
+    };
+
+    checkScroll();
+    nav.addEventListener('scroll', checkScroll);
+    window.addEventListener('resize', checkScroll);
+
+    return () => {
+      nav.removeEventListener('scroll', checkScroll);
+      window.removeEventListener('resize', checkScroll);
+    };
+  }, []);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
@@ -491,7 +515,10 @@ function OrnamentOfStainlessLight() {
           &larr; Back
         </button>
 
-        <nav className="chapter-nav expanded">
+        <nav
+          ref={navRef}
+          className={`chapter-nav expanded ${navScrollState.canScrollLeft ? 'fade-left' : ''} ${navScrollState.canScrollRight ? 'fade-right' : ''}`}
+        >
           {sections.map(section => (
             <button
               key={section.id}
