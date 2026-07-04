@@ -621,6 +621,36 @@ h2 {
   margin-top: 0.2rem;
 }
 
+/* Section navigation buttons (same styling as anchor links) */
+.nav-section-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  font-family: inherit;
+  padding: 0.25rem 0.4rem;
+  transition: background 0.2s;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.nav-section-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.chapter-nav.expanded .nav-section-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.chapter-nav.expanded .nav-section-btn:last-of-type {
+  border-right: none;
+}
+
 .page-transition {
   position: fixed;
   top: 0;

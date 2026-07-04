@@ -33,7 +33,6 @@ function OrnamentOfStainlessLight() {
   const [notesLookup, setNotesLookup] = useState({});
   const [glossaryLookup, setGlossaryLookup] = useState({});
   const [searchOpen, setSearchOpen] = useState(false);
-  const [activeSearchResult, setActiveSearchResult] = useState(null);
   const scrollContainerRef = useRef(null);
 
   const toggleNoteSection = (idx) => {
@@ -52,9 +51,7 @@ function OrnamentOfStainlessLight() {
       return;
     }
     // Find matches in current content with chapter context
-    const regex = new RegExp(query, 'gi');
     const matches = [];
-    let match;
 
     // Split content into chapters to track which chapter each match is in
     const parts = content.split('\n---\n');
@@ -92,9 +89,6 @@ function OrnamentOfStainlessLight() {
       ...prev,
       [result.chapterIdx]: true
     }));
-
-    // Set active search result to highlight
-    setActiveSearchResult(result.index);
 
     // Close search panel
     setSearchOpen(false);
@@ -499,14 +493,14 @@ function OrnamentOfStainlessLight() {
 
         <nav className="chapter-nav expanded">
           {sections.map(section => (
-            <a
+            <button
               key={section.id}
-              href="#"
-              onClick={(e) => { e.preventDefault(); setCurrentSection(section.id); }}
+              className="nav-section-btn"
+              onClick={() => setCurrentSection(section.id)}
               style={currentSection === section.id ? { background: 'rgba(255,255,255,0.3)' } : {}}
             >
               <span className="ch-name">{section.name}</span>
-            </a>
+            </button>
           ))}
           <button
             className="nav-search-btn"
