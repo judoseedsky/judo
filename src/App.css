@@ -10,6 +10,9 @@
   font-weight: 600;
 }
 
+/* Atkinson Hyperlegible for Ornament text */
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap');
+
 body {
   background-image: url(./img/original.gif);
   background-attachment: fixed;
@@ -206,8 +209,10 @@ h2 {
   text-align: center;
   margin-top: 0;
   margin-bottom: 0.5rem;
-  color: #3d2815;
+  color: #3d2815 !important;
   padding: 0;
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 3rem;
 }
 
 .scroll-subtitle {
@@ -225,6 +230,8 @@ h2 {
   margin-bottom: 1.5rem;
   cursor: default;
   color: #3d2815;
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 2rem;
 }
 
 .hymn-text h2:hover {
