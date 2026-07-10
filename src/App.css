@@ -467,9 +467,12 @@ h2 {
 }
 
 .hymn-text .note-entry {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.75rem;
   padding: 0.5rem 0;
   border-bottom: 1px solid rgba(60, 40, 20, 0.1);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
 }
 
 .hymn-text .note-header {
@@ -489,16 +492,26 @@ h2 {
   min-width: 3rem;
 }
 
+.hymn-text .note-number.note-link {
+  cursor: pointer;
+  color: #8b4513;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+.hymn-text .note-number.note-link:hover {
+  color: #5a2d0a;
+  text-decoration-style: solid;
+}
+
 .hymn-text .note-toggle {
   font-size: 1.2rem;
   opacity: 0.5;
 }
 
 .hymn-text .note-text {
-  margin-top: 0.5rem;
-  padding-left: 1rem;
-  text-indent: 0;
-  border-left: 2px solid rgba(60, 40, 20, 0.2);
+  flex: 1;
+  line-height: 1.6;
 }
 
 .hymn-text .note-section {
@@ -1012,16 +1025,83 @@ h2 {
   border-color: rgba(255, 255, 255, 0.5);
 }
 
-/* Search highlight animation */
-mark.search-highlight {
-  background: rgba(255, 200, 50, 0.7);
-  padding: 0.1rem 0.2rem;
-  border-radius: 2px;
-  animation: highlightPulse 2s ease-out;
+/* Highlighted note reference when navigated from notes section */
+.note-ref.note-highlighted {
+  background: rgba(255, 215, 0, 0.6);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  animation: noteHighlight 2s ease-out;
+}
+
+@keyframes noteHighlight {
+  0% {
+    background: rgba(255, 215, 0, 0.9);
+    transform: scale(1.2);
+  }
+  100% {
+    background: rgba(255, 215, 0, 0.6);
+    transform: scale(1);
+  }
+}
+
+/* Auto-wrapped glossary terms */
+.tooltip-wrapper .glossary-term-auto {
+  border-bottom: 1px dotted rgba(139, 69, 19, 0.5);
+  cursor: help;
+}
+
+/* Sticky header when chapter expanded */
+.hymn-text .accordion-chapter.expanded h2 {
+  position: sticky;
+  top: 0;
+  background: #f4e4c1;
+  z-index: 10;
+  border-bottom: 1px solid rgba(60, 40, 20, 0.2);
+}
+
+/* Sticky header when glossary entry expanded */
+.hymn-text .glossary-entry.expanded dt {
+  position: sticky;
+  top: 0;
+  background: #f4e4c1;
+  padding: 0.75rem 0;
+  margin: -0.5rem 0 0 0;
+  z-index: 10;
+  border-bottom: 1px solid rgba(60, 40, 20, 0.2);
+}
+
+/* Search result section label */
+.search-result-section {
+  display: block;
+  font-size: 0.75rem;
+  color: #8b4513;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+/* Search highlighting */
+.search-highlight {
+  background: linear-gradient(135deg, #ffeb3b 0%, #ffc107 100%);
+  color: #1a1a1a;
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.5), 0 0 0 2px rgba(255, 152, 0, 0.3);
+  font-weight: 600;
+  animation: highlightPulse 2s ease-in-out;
 }
 
 @keyframes highlightPulse {
-  0%, 100% { background: rgba(255, 200, 50, 0.7); }
-  50% { background: rgba(255, 150, 0, 0.9); }
+  0% {
+    box-shadow: 0 2px 8px rgba(255, 193, 7, 0.5), 0 0 0 4px rgba(255, 152, 0, 0.6);
+    transform: scale(1.05);
+  }
+  50% {
+    box-shadow: 0 2px 8px rgba(255, 193, 7, 0.5), 0 0 0 2px rgba(255, 152, 0, 0.3);
+    transform: scale(1);
+  }
+  100% {
+    box-shadow: 0 2px 8px rgba(255, 193, 7, 0.5), 0 0 0 2px rgba(255, 152, 0, 0.3);
+    transform: scale(1);
+  }
 }
 
