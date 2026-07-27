@@ -1,9 +1,8 @@
 /* Button Group Container */
 .webster-btn-group {
-  position: absolute;
   transform: translateX(-50%);
   display: flex;
-  z-index: 1001;
+  z-index: 10001;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   border-radius: 4px;
   overflow: hidden;
@@ -52,6 +51,11 @@
   background: Highlight;
   color: HighlightText;
   border-radius: 1px;
+  cursor: pointer;
+}
+
+.webster-user-highlight:hover {
+  opacity: 0.8;
 }
 
 /* When highlight-only (multi-word), round the button fully */
@@ -61,7 +65,6 @@
 
 /* Webster Popup */
 .webster-popup {
-  position: absolute;
   transform: translateX(-50%) translateY(-100%);
   background: #2c1810;
   color: #f5e6d3;
@@ -71,7 +74,7 @@
   line-height: 1.5;
   max-width: 350px;
   min-width: 220px;
-  z-index: 1002;
+  z-index: 10002;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   animation: websterFadeIn 0.2s ease-out;
 }

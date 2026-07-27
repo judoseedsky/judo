@@ -51,7 +51,6 @@ const saveHighlights = (highlights) => {
 
 function WebsterLookup({ children, containerRef }) {
   const [selection, setSelection] = useState(null);
-  const [selectionRange, setSelectionRange] = useState(null);
   const [buttonPosition, setButtonPosition] = useState(null);
   const [definition, setDefinition] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -62,9 +61,16 @@ function WebsterLookup({ children, containerRef }) {
   const popupRef = useRef(null);
   const audioRef = useRef(null);
 
+  // Remove a highlight
+  const removeHighlight = useCallback((phrase) => {
+    const newHighlights = highlights.filter(h => h !== phrase);
+    setHighlights(newHighlights);
+    saveHighlights(newHighlights);
+  }, [highlights]);
+
   // Apply highlights to text content
   useEffect(() => {
-    if (!containerRef?.current || highlights.length === 0) return;
+    if (!containerRef?.current) return;
 
     const applyHighlights = () => {
       // Remove existing highlights first
@@ -76,6 +82,8 @@ function WebsterLookup({ children, containerRef }) {
 
       // Normalize text nodes after removing highlights
       containerRef.current.normalize();
+
+      if (highlights.length === 0) return;
 
       // Apply new highlights
       const walker = document.createTreeWalker(
@@ -91,8 +99,10 @@ function WebsterLookup({ children, containerRef }) {
         textNodes.push(node);
       }
 
-      highlights.forEach(word => {
-        const regex = new RegExp(`\\b(${word})\\b`, 'gi');
+      highlights.forEach(phrase => {
+        const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`(${escapedPhrase})`, 'gi');
+
         textNodes.forEach(textNode => {
           if (textNode.parentNode.classList?.contains('webster-user-highlight')) return;
           if (textNode.parentNode.tagName === 'SCRIPT' || textNode.parentNode.tagName === 'STYLE') return;
@@ -111,6 +121,7 @@ function WebsterLookup({ children, containerRef }) {
               const span = document.createElement('span');
               span.className = 'webster-user-highlight';
               span.textContent = match[1];
+              span.dataset.phrase = phrase;
               fragment.appendChild(span);
               lastIndex = regex.lastIndex;
             }
@@ -132,6 +143,27 @@ function WebsterLookup({ children, containerRef }) {
     return () => clearTimeout(timeoutId);
   }, [highlights, containerRef, children]);
 
+  // Handle clicks on highlighted text to unhighlight
+  useEffect(() => {
+    if (!containerRef?.current) return;
+
+    const handleHighlightClick = (e) => {
+      if (e.target.classList.contains('webster-user-highlight')) {
+        e.preventDefault();
+        e.stopPropagation();
+        const phrase = e.target.dataset.phrase;
+        if (phrase && window.confirm(`Remove highlight for "${phrase}"?`)) {
+          removeHighlight(phrase);
+        }
+      }
+    };
+
+    containerRef.current.addEventListener('click', handleHighlightClick);
+    return () => {
+      containerRef.current?.removeEventListener('click', handleHighlightClick);
+    };
+  }, [containerRef, removeHighlight]);
+
   // Handle text selection
   const handleSelectionChange = useCallback(() => {
     const sel = window.getSelection();
@@ -139,34 +171,42 @@ function WebsterLookup({ children, containerRef }) {
 
     if (text && text.length > 0 && text.length < 100) {
       if (containerRef?.current) {
-        const range = sel.getRangeAt(0);
-        if (!containerRef.current.contains(range.commonAncestorContainer)) {
+        try {
+          const range = sel.getRangeAt(0);
+          if (!containerRef.current.contains(range.commonAncestorContainer)) {
+            return;
+          }
+        } catch {
           return;
         }
       }
 
-      const range = sel.getRangeAt(0);
-      const rect = range.getBoundingClientRect();
+      try {
+        const range = sel.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
 
-      // Store both raw text (for highlight) and cleaned single word (for lookup)
-      const cleanedWord = text.toLowerCase().replace(/[^a-z]/g, '');
-      const isSingleWord = !/\s/.test(text);
+        // Store both raw text (for highlight) and cleaned single word (for lookup)
+        const cleanedWord = text.toLowerCase().replace(/[^a-z]/g, '');
+        const isSingleWord = !/\s/.test(text);
 
-      setSelection({
-        raw: text,
-        word: cleanedWord,
-        isSingleWord
-      });
-      setSelectionRange(range.cloneRange());
-      setButtonPosition({
-        top: rect.top + window.scrollY - 40,
-        left: rect.left + window.scrollX + (rect.width / 2)
-      });
-      setDefinition(null);
-      setError(null);
+        setSelection({
+          raw: text,
+          word: cleanedWord,
+          isSingleWord
+        });
+
+        // Use fixed positioning relative to viewport
+        setButtonPosition({
+          top: rect.top - 45,
+          left: rect.left + (rect.width / 2)
+        });
+        setDefinition(null);
+        setError(null);
+      } catch {
+        // Selection might be invalid
+      }
     } else {
       setSelection(null);
-      setSelectionRange(null);
       setButtonPosition(null);
       setDefinition(null);
       setPopupPosition(null);
@@ -192,7 +232,11 @@ function WebsterLookup({ children, containerRef }) {
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
   }, []);
 
   const fetchDefinition = async (word) => {
@@ -252,7 +296,9 @@ function WebsterLookup({ children, containerRef }) {
     }
   };
 
-  const handleLookupClick = () => {
+  const handleLookupClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (selection?.isSingleWord && buttonPosition) {
       setPopupPosition({
         top: buttonPosition.top - 10,
@@ -262,7 +308,9 @@ function WebsterLookup({ children, containerRef }) {
     }
   };
 
-  const handleHighlightClick = () => {
+  const handleHighlightClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (selection?.raw && !highlights.includes(selection.raw.toLowerCase())) {
       const newHighlights = [...highlights, selection.raw.toLowerCase()];
       setHighlights(newHighlights);
@@ -295,24 +343,30 @@ function WebsterLookup({ children, containerRef }) {
     <>
       {children}
 
-      {/* Lookup & Highlight Buttons */}
+      {/* Lookup & Highlight Buttons - Fixed positioning */}
       {buttonPosition && selection && !definition && !loading && (
         <div
           ref={buttonRef}
           className="webster-btn-group"
           style={{
-            top: buttonPosition.top,
-            left: buttonPosition.left
+            position: 'fixed',
+            top: Math.max(10, buttonPosition.top),
+            left: Math.min(Math.max(80, buttonPosition.left), window.innerWidth - 80)
           }}
         >
           {canLookup && (
-            <button className="webster-lookup-btn" onClick={handleLookupClick}>
+            <button
+              className="webster-lookup-btn"
+              onClick={handleLookupClick}
+              onTouchEnd={handleLookupClick}
+            >
               Lookup
             </button>
           )}
           <button
             className={`webster-highlight-btn ${isAlreadyHighlighted ? 'already-highlighted' : ''} ${!canLookup ? 'highlight-only' : ''}`}
             onClick={handleHighlightClick}
+            onTouchEnd={handleHighlightClick}
             disabled={isAlreadyHighlighted}
           >
             {isAlreadyHighlighted ? 'Highlighted' : 'Highlight'}
@@ -325,8 +379,9 @@ function WebsterLookup({ children, containerRef }) {
         <div
           className="webster-popup"
           style={{
-            top: popupPosition.top,
-            left: popupPosition.left
+            position: 'fixed',
+            top: Math.max(10, popupPosition.top),
+            left: Math.min(Math.max(100, popupPosition.left), window.innerWidth - 100)
           }}
         >
           <div className="webster-loading">Looking up...</div>
@@ -339,8 +394,9 @@ function WebsterLookup({ children, containerRef }) {
           ref={popupRef}
           className="webster-popup"
           style={{
-            top: popupPosition.top,
-            left: popupPosition.left
+            position: 'fixed',
+            top: Math.max(10, popupPosition.top),
+            left: Math.min(Math.max(100, popupPosition.left), window.innerWidth - 100)
           }}
         >
           <button className="webster-close" onClick={handleClose}>&times;</button>
@@ -395,8 +451,9 @@ function WebsterLookup({ children, containerRef }) {
         <div
           className="webster-popup webster-error"
           style={{
-            top: popupPosition.top,
-            left: popupPosition.left
+            position: 'fixed',
+            top: Math.max(10, popupPosition.top),
+            left: Math.min(Math.max(100, popupPosition.left), window.innerWidth - 100)
           }}
         >
           <button className="webster-close" onClick={handleClose}>&times;</button>
