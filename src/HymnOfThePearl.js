@@ -1,6 +1,7 @@
 import './App.css';
 import { useNavigate } from 'react-router-dom';
 import { useState, useRef } from 'react';
+import WebsterLookup from './components/WebsterLookup';
 
 function HymnOfThePearl() {
   const navigate = useNavigate();
@@ -83,6 +84,7 @@ function HymnOfThePearl() {
 
         <div className="scroll-container">
           <div className="scroll-top"></div>
+          <WebsterLookup containerRef={contentRef}>
           <div className="hymn-text" ref={contentRef}>
             <h1 className="scroll-title">The Hymn of the Pearl</h1>
           <p className="scroll-subtitle">Judas Thomas, the Apostle</p>
@@ -127,6 +129,7 @@ function HymnOfThePearl() {
 
             <p className="hymn-attribution">Translation by Lynn Bauman<br/>From the Acts of Thomas</p>
           </div>
+          </WebsterLookup>
           <div className="scroll-bottom"></div>
         </div>
 

@@ -1,6 +1,7 @@
 import './App.css';
 import { useNavigate } from 'react-router-dom';
 import { useState, useRef } from 'react';
+import WebsterLookup from './components/WebsterLookup';
 
 function YogaSutras() {
   const navigate = useNavigate();
@@ -86,6 +87,7 @@ function YogaSutras() {
 
         <div className="scroll-container">
           <div className="scroll-top"></div>
+          <WebsterLookup containerRef={contentRef}>
           <div className="hymn-text sutra-text" ref={contentRef}>
             <h1 className="scroll-title">The Yoga Sutras</h1>
           <p className="scroll-subtitle">Patanjali · Translation by Swami Vivekananda</p>
@@ -312,6 +314,7 @@ function YogaSutras() {
 
             <p className="hymn-attribution">Translation by Swami Vivekananda (1896)<br/>From Raja Yoga</p>
           </div>
+          </WebsterLookup>
           <div className="scroll-bottom"></div>
         </div>
 

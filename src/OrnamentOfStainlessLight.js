@@ -1,6 +1,7 @@
 import './App.css';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useMemo, useRef } from 'react';
+import WebsterLookup from './components/WebsterLookup';
 
 // Tooltip component for hover display (with touch support)
 function Tooltip({ children, content, type }) {
@@ -60,6 +61,7 @@ function OrnamentOfStainlessLight() {
   const [highlightNoteNum, setHighlightNoteNum] = useState(null); // Note number to highlight
   const [allContent, setAllContent] = useState({}); // All sections content for search
   const scrollContainerRef = useRef(null);
+  const contentRef = useRef(null);
 
   const toggleNoteSection = (idx) => {
     setExpandedNoteSections(prev => ({
@@ -674,7 +676,8 @@ function OrnamentOfStainlessLight() {
 
         <div className="scroll-container" ref={scrollContainerRef}>
           <div className="scroll-top"></div>
-          <div className="hymn-text">
+          <WebsterLookup containerRef={contentRef}>
+          <div className="hymn-text" ref={contentRef}>
             <h1 className="scroll-title">Ornament of Stainless Light</h1>
             <p className="scroll-subtitle">An Exposition of the Kālacakra Tantra</p>
             <p className="hymn-attribution">
@@ -691,6 +694,7 @@ function OrnamentOfStainlessLight() {
             <p className="hymn-ending"><em>From The Library of Tibetan Classics, Volume 14</em></p>
             <p className="hymn-attribution">Wisdom Publications</p>
           </div>
+          </WebsterLookup>
           <div className="scroll-bottom"></div>
         </div>
 

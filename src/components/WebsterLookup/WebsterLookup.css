@@ -1,0 +1,240 @@
+/* Button Group Container */
+.webster-btn-group {
+  position: absolute;
+  transform: translateX(-50%);
+  display: flex;
+  z-index: 1001;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* Shared button styles */
+.webster-lookup-btn,
+.webster-highlight-btn {
+  background: #2c1810;
+  color: #f5e6d3;
+  border: none;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+
+.webster-lookup-btn:hover,
+.webster-highlight-btn:hover {
+  background: #3d2815;
+}
+
+.webster-lookup-btn:active,
+.webster-highlight-btn:active {
+  background: #4a3020;
+}
+
+/* Highlight button specific */
+.webster-highlight-btn {
+  border-left: 1px solid rgba(245, 230, 211, 0.2);
+}
+
+.webster-highlight-btn.already-highlighted {
+  color: rgba(245, 230, 211, 0.4);
+  cursor: default;
+}
+
+.webster-highlight-btn.already-highlighted:hover {
+  background: #2c1810;
+}
+
+/* User highlighted text in content - matches native selection color */
+.webster-user-highlight {
+  background: Highlight;
+  color: HighlightText;
+  border-radius: 1px;
+}
+
+/* When highlight-only (multi-word), round the button fully */
+.webster-highlight-btn.highlight-only {
+  border-left: none;
+}
+
+/* Webster Popup */
+.webster-popup {
+  position: absolute;
+  transform: translateX(-50%) translateY(-100%);
+  background: #2c1810;
+  color: #f5e6d3;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  max-width: 350px;
+  min-width: 220px;
+  z-index: 1002;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  animation: websterFadeIn 0.2s ease-out;
+}
+
+.webster-popup::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 10px solid transparent;
+  border-top-color: #2c1810;
+}
+
+@keyframes websterFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-100%) translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-100%);
+  }
+}
+
+/* Close button */
+.webster-close {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  color: rgba(245, 230, 211, 0.5);
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.webster-close:hover {
+  color: #f5e6d3;
+}
+
+/* Header with word and part of speech */
+.webster-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+  padding-right: 1.5rem;
+}
+
+/* Audio play button */
+.webster-audio-btn {
+  background: transparent;
+  border: none;
+  color: rgba(245, 230, 211, 0.6);
+  cursor: pointer;
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: color 0.2s, background 0.2s;
+}
+
+.webster-audio-btn:hover {
+  color: #f5e6d3;
+  background: rgba(245, 230, 211, 0.1);
+}
+
+.webster-audio-btn:active {
+  transform: scale(0.95);
+}
+
+.webster-word {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #f5e6d3;
+}
+
+.webster-pos {
+  font-style: italic;
+  color: rgba(245, 230, 211, 0.7);
+  font-size: 0.85rem;
+}
+
+/* Pronunciation */
+.webster-pronunciation {
+  color: rgba(245, 230, 211, 0.6);
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Definitions list */
+.webster-definitions {
+  margin: 0.5rem 0 0 0;
+  padding-left: 1.25rem;
+}
+
+.webster-definitions li {
+  margin-bottom: 0.35rem;
+  color: #f5e6d3;
+}
+
+.webster-definitions li:last-child {
+  margin-bottom: 0;
+}
+
+/* Attribution */
+.webster-attribution {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(245, 230, 211, 0.15);
+  font-size: 0.7rem;
+  color: rgba(245, 230, 211, 0.4);
+  text-align: right;
+}
+
+/* Loading state */
+.webster-loading {
+  color: rgba(245, 230, 211, 0.7);
+  font-style: italic;
+}
+
+/* Not found state */
+.webster-not-found p {
+  margin: 0.5rem 0;
+  color: rgba(245, 230, 211, 0.8);
+}
+
+.webster-not-found ul {
+  margin: 0.5rem 0 0 0;
+  padding-left: 1.25rem;
+}
+
+.webster-not-found li {
+  color: rgba(245, 230, 211, 0.9);
+  margin-bottom: 0.25rem;
+}
+
+/* Error state */
+.webster-popup.webster-error p {
+  margin: 0.5rem 0 0 0;
+  color: rgba(245, 230, 211, 0.8);
+}
+
+/* Mobile adjustments */
+@media only screen and (max-width: 600px) {
+  .webster-popup {
+    max-width: 280px;
+    min-width: 200px;
+    padding: 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .webster-word {
+    font-size: 1rem;
+  }
+
+  .webster-lookup-btn,
+  .webster-highlight-btn {
+    padding: 0.5rem 0.65rem;
+    font-size: 0.8rem;
+  }
+}
