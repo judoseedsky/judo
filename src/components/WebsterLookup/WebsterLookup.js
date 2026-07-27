@@ -61,13 +61,6 @@ function WebsterLookup({ children, containerRef }) {
   const popupRef = useRef(null);
   const audioRef = useRef(null);
 
-  // Remove a highlight
-  const removeHighlight = useCallback((phrase) => {
-    const newHighlights = highlights.filter(h => h !== phrase);
-    setHighlights(newHighlights);
-    saveHighlights(newHighlights);
-  }, [highlights]);
-
   // Apply highlights to text content
   useEffect(() => {
     if (!containerRef?.current) return;
@@ -145,24 +138,28 @@ function WebsterLookup({ children, containerRef }) {
 
   // Handle clicks on highlighted text to unhighlight
   useEffect(() => {
-    if (!containerRef?.current) return;
+    const container = containerRef?.current;
+    if (!container) return;
 
     const handleHighlightClick = (e) => {
-      if (e.target.classList.contains('webster-user-highlight')) {
+      const target = e.target;
+      if (target.classList && target.classList.contains('webster-user-highlight')) {
         e.preventDefault();
         e.stopPropagation();
-        const phrase = e.target.dataset.phrase;
+        const phrase = target.dataset.phrase;
         if (phrase && window.confirm(`Remove highlight for "${phrase}"?`)) {
-          removeHighlight(phrase);
+          const newHighlights = highlights.filter(h => h !== phrase);
+          setHighlights(newHighlights);
+          saveHighlights(newHighlights);
         }
       }
     };
 
-    containerRef.current.addEventListener('click', handleHighlightClick);
+    container.addEventListener('click', handleHighlightClick, true); // Use capture phase
     return () => {
-      containerRef.current?.removeEventListener('click', handleHighlightClick);
+      container.removeEventListener('click', handleHighlightClick, true);
     };
-  }, [containerRef, removeHighlight]);
+  }, [containerRef, highlights]);
 
   // Handle text selection
   const handleSelectionChange = useCallback(() => {
