@@ -25,9 +25,14 @@ const getAudioUrl = (audioFile) => {
   return `https://media.merriam-webster.com/audio/prons/en/us/mp3/${subdir}/${audioFile}.mp3`;
 };
 
+// Generate unique ID for highlights
+const generateHighlightId = () => {
+  return 'hl-' + Math.random().toString(36).substr(2, 9);
+};
+
 // Get storage key for current page
 const getStorageKey = () => {
-  return `webster-highlights-${window.location.pathname}`;
+  return `webster-highlights-v2-${window.location.pathname}`;
 };
 
 // Load highlights from localStorage
@@ -41,7 +46,7 @@ const loadHighlights = () => {
 };
 
 // Save highlights to localStorage
-const saveHighlights = (highlights) => {
+const saveHighlightsToStorage = (highlights) => {
   try {
     localStorage.setItem(getStorageKey(), JSON.stringify(highlights));
   } catch {
@@ -57,109 +62,78 @@ function WebsterLookup({ children, containerRef }) {
   const [error, setError] = useState(null);
   const [popupPosition, setPopupPosition] = useState(null);
   const [highlights, setHighlights] = useState(loadHighlights);
+  const [selectedHighlightId, setSelectedHighlightId] = useState(null);
   const buttonRef = useRef(null);
   const popupRef = useRef(null);
   const audioRef = useRef(null);
 
-  // Apply highlights to text content
+  // Apply highlights to text content on mount/update
   useEffect(() => {
     if (!containerRef?.current) return;
 
     const applyHighlights = () => {
-      // Remove existing highlights first
+      // Remove existing highlight spans first
       const existingHighlights = containerRef.current.querySelectorAll('.webster-user-highlight');
       existingHighlights.forEach(el => {
         const text = document.createTextNode(el.textContent);
         el.parentNode.replaceChild(text, el);
       });
 
-      // Normalize text nodes after removing highlights
+      // Normalize text nodes
       containerRef.current.normalize();
 
       if (highlights.length === 0) return;
 
-      // Apply new highlights
-      const walker = document.createTreeWalker(
-        containerRef.current,
-        NodeFilter.SHOW_TEXT,
-        null,
-        false
-      );
+      // Apply each highlight - find by context (before + text + after)
+      highlights.forEach(highlight => {
+        const { id, text, contextBefore, contextAfter } = highlight;
 
-      const textNodes = [];
-      let node;
-      while ((node = walker.nextNode())) {
-        textNodes.push(node);
-      }
+        const walker = document.createTreeWalker(
+          containerRef.current,
+          NodeFilter.SHOW_TEXT,
+          null,
+          false
+        );
 
-      highlights.forEach(phrase => {
-        const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const regex = new RegExp(`(${escapedPhrase})`, 'gi');
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentNode.classList?.contains('webster-user-highlight')) continue;
+          if (node.parentNode.tagName === 'SCRIPT' || node.parentNode.tagName === 'STYLE') continue;
 
-        textNodes.forEach(textNode => {
-          if (textNode.parentNode.classList?.contains('webster-user-highlight')) return;
-          if (textNode.parentNode.tagName === 'SCRIPT' || textNode.parentNode.tagName === 'STYLE') return;
+          const nodeText = node.textContent;
+          const searchPattern = contextBefore + text + contextAfter;
+          const patternIndex = nodeText.indexOf(searchPattern);
 
-          const text = textNode.textContent;
-          if (regex.test(text)) {
-            regex.lastIndex = 0;
+          if (patternIndex !== -1) {
+            const textStartIndex = patternIndex + contextBefore.length;
+            const textEndIndex = textStartIndex + text.length;
+
+            // Split the text node and wrap the highlight
+            const before = nodeText.slice(0, textStartIndex);
+            const highlighted = nodeText.slice(textStartIndex, textEndIndex);
+            const after = nodeText.slice(textEndIndex);
+
             const fragment = document.createDocumentFragment();
-            let lastIndex = 0;
-            let match;
+            if (before) fragment.appendChild(document.createTextNode(before));
 
-            while ((match = regex.exec(text)) !== null) {
-              if (match.index > lastIndex) {
-                fragment.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
-              }
-              const span = document.createElement('span');
-              span.className = 'webster-user-highlight';
-              span.textContent = match[1];
-              span.dataset.phrase = phrase;
-              fragment.appendChild(span);
-              lastIndex = regex.lastIndex;
-            }
+            const span = document.createElement('span');
+            span.className = 'webster-user-highlight';
+            span.textContent = highlighted;
+            span.dataset.highlightId = id;
+            fragment.appendChild(span);
 
-            if (lastIndex < text.length) {
-              fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
-            }
+            if (after) fragment.appendChild(document.createTextNode(after));
 
-            if (fragment.childNodes.length > 0) {
-              textNode.parentNode.replaceChild(fragment, textNode);
-            }
+            node.parentNode.replaceChild(fragment, node);
+            break; // Only highlight first match for this specific highlight
           }
-        });
+        }
       });
     };
 
-    // Delay to ensure content is rendered
     const timeoutId = setTimeout(applyHighlights, 100);
     return () => clearTimeout(timeoutId);
   }, [highlights, containerRef, children]);
-
-  // Handle clicks on highlighted text to unhighlight
-  useEffect(() => {
-    const container = containerRef?.current;
-    if (!container) return;
-
-    const handleHighlightClick = (e) => {
-      const target = e.target;
-      if (target.classList && target.classList.contains('webster-user-highlight')) {
-        e.preventDefault();
-        e.stopPropagation();
-        const phrase = target.dataset.phrase;
-        if (phrase && window.confirm(`Remove highlight for "${phrase}"?`)) {
-          const newHighlights = highlights.filter(h => h !== phrase);
-          setHighlights(newHighlights);
-          saveHighlights(newHighlights);
-        }
-      }
-    };
-
-    container.addEventListener('click', handleHighlightClick, true); // Use capture phase
-    return () => {
-      container.removeEventListener('click', handleHighlightClick, true);
-    };
-  }, [containerRef, highlights]);
 
   // Handle text selection
   const handleSelectionChange = useCallback(() => {
@@ -182,17 +156,31 @@ function WebsterLookup({ children, containerRef }) {
         const range = sel.getRangeAt(0);
         const rect = range.getBoundingClientRect();
 
-        // Store both raw text (for highlight) and cleaned single word (for lookup)
+        // Check if selection is within a highlight span
+        const startContainer = range.startContainer;
+        // Handle both cases: startContainer is text node (check parent) or element (check itself)
+        const highlightSpan = startContainer.nodeType === Node.TEXT_NODE
+          ? startContainer.parentElement?.closest('.webster-user-highlight')
+          : startContainer.closest?.('.webster-user-highlight') || startContainer.parentElement?.closest('.webster-user-highlight');
+
+        // Store selection info
         const cleanedWord = text.toLowerCase().replace(/[^a-z]/g, '');
         const isSingleWord = !/\s/.test(text);
 
         setSelection({
           raw: text,
           word: cleanedWord,
-          isSingleWord
+          isSingleWord,
+          range: range.cloneRange()
         });
 
-        // Use fixed positioning relative to viewport
+        // Check if this exact text is already highlighted at this position
+        if (highlightSpan) {
+          setSelectedHighlightId(highlightSpan.dataset.highlightId);
+        } else {
+          setSelectedHighlightId(null);
+        }
+
         setButtonPosition({
           top: rect.top - 45,
           left: rect.left + (rect.width / 2)
@@ -207,6 +195,7 @@ function WebsterLookup({ children, containerRef }) {
       setButtonPosition(null);
       setDefinition(null);
       setPopupPosition(null);
+      setSelectedHighlightId(null);
     }
   }, [containerRef]);
 
@@ -225,6 +214,7 @@ function WebsterLookup({ children, containerRef }) {
         setPopupPosition(null);
         setSelection(null);
         setButtonPosition(null);
+        setSelectedHighlightId(null);
       }
     };
 
@@ -308,14 +298,52 @@ function WebsterLookup({ children, containerRef }) {
   const handleHighlightClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (selection?.raw && !highlights.includes(selection.raw.toLowerCase())) {
-      const newHighlights = [...highlights, selection.raw.toLowerCase()];
-      setHighlights(newHighlights);
-      saveHighlights(newHighlights);
-    }
+
+    if (!selection?.range) return;
+
+    // Get context around the selection for precise matching later
+    const range = selection.range;
+    const textNode = range.startContainer;
+    const fullText = textNode.textContent || '';
+    const startOffset = range.startOffset;
+    const endOffset = range.endOffset;
+
+    // Get some context before and after (up to 20 chars)
+    const contextBefore = fullText.slice(Math.max(0, startOffset - 20), startOffset);
+    const contextAfter = fullText.slice(endOffset, Math.min(fullText.length, endOffset + 20));
+
+    const newHighlight = {
+      id: generateHighlightId(),
+      text: selection.raw,
+      contextBefore,
+      contextAfter
+    };
+
+    const newHighlights = [...highlights, newHighlight];
+    setHighlights(newHighlights);
+    saveHighlightsToStorage(newHighlights);
+
     // Clear selection UI
     setSelection(null);
     setButtonPosition(null);
+    setSelectedHighlightId(null);
+    window.getSelection()?.removeAllRanges();
+  };
+
+  const handleRemoveHighlightClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (selectedHighlightId) {
+      const newHighlights = highlights.filter(h => h.id !== selectedHighlightId);
+      setHighlights(newHighlights);
+      saveHighlightsToStorage(newHighlights);
+    }
+
+    // Clear selection UI
+    setSelection(null);
+    setButtonPosition(null);
+    setSelectedHighlightId(null);
     window.getSelection()?.removeAllRanges();
   };
 
@@ -324,6 +352,7 @@ function WebsterLookup({ children, containerRef }) {
     setPopupPosition(null);
     setSelection(null);
     setButtonPosition(null);
+    setSelectedHighlightId(null);
     window.getSelection()?.removeAllRanges();
   };
 
@@ -333,8 +362,8 @@ function WebsterLookup({ children, containerRef }) {
     }
   };
 
-  const isAlreadyHighlighted = selection?.raw && highlights.includes(selection.raw.toLowerCase());
   const canLookup = selection?.isSingleWord;
+  const isHighlighted = selectedHighlightId !== null;
 
   return (
     <>
@@ -351,7 +380,7 @@ function WebsterLookup({ children, containerRef }) {
             left: Math.min(Math.max(80, buttonPosition.left), window.innerWidth - 80)
           }}
         >
-          {canLookup && (
+          {canLookup && !isHighlighted && (
             <button
               className="webster-lookup-btn"
               onClick={handleLookupClick}
@@ -360,14 +389,23 @@ function WebsterLookup({ children, containerRef }) {
               Lookup
             </button>
           )}
-          <button
-            className={`webster-highlight-btn ${isAlreadyHighlighted ? 'already-highlighted' : ''} ${!canLookup ? 'highlight-only' : ''}`}
-            onClick={handleHighlightClick}
-            onTouchEnd={handleHighlightClick}
-            disabled={isAlreadyHighlighted}
-          >
-            {isAlreadyHighlighted ? 'Highlighted' : 'Highlight'}
-          </button>
+          {isHighlighted ? (
+            <button
+              className="webster-highlight-btn remove-highlight"
+              onClick={handleRemoveHighlightClick}
+              onTouchEnd={handleRemoveHighlightClick}
+            >
+              Remove Highlight
+            </button>
+          ) : (
+            <button
+              className={`webster-highlight-btn ${!canLookup ? 'highlight-only' : ''}`}
+              onClick={handleHighlightClick}
+              onTouchEnd={handleHighlightClick}
+            >
+              Highlight
+            </button>
+          )}
         </div>
       )}
 
