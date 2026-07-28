@@ -84,50 +84,91 @@ function WebsterLookup({ children, containerRef }) {
 
       if (highlights.length === 0) return;
 
-      // Apply each highlight - find by context (before + text + after)
+      // Get full text content and build a map to text nodes
+      const textNodes = [];
+      const walker = document.createTreeWalker(
+        containerRef.current,
+        NodeFilter.SHOW_TEXT,
+        null,
+        false
+      );
+      let node;
+      while ((node = walker.nextNode())) {
+        if (node.parentNode.tagName === 'SCRIPT' || node.parentNode.tagName === 'STYLE') continue;
+        textNodes.push(node);
+      }
+
+      // Build full text and position map
+      let fullText = '';
+      const nodePositions = []; // {node, start, end}
+      textNodes.forEach(node => {
+        const start = fullText.length;
+        fullText += node.textContent;
+        nodePositions.push({ node, start, end: fullText.length });
+      });
+
+      // Apply each highlight
       highlights.forEach(highlight => {
-        const { id, text, contextBefore, contextAfter } = highlight;
+        const { id, text, contextBefore, contextAfter, textStart, textEnd } = highlight;
 
-        const walker = document.createTreeWalker(
-          containerRef.current,
-          NodeFilter.SHOW_TEXT,
-          null,
-          false
-        );
+        let matchStart = -1;
 
-        let node;
-        while ((node = walker.nextNode())) {
-          if (node.parentNode.classList?.contains('webster-user-highlight')) continue;
-          if (node.parentNode.tagName === 'SCRIPT' || node.parentNode.tagName === 'STYLE') continue;
-
-          const nodeText = node.textContent;
-          const searchPattern = contextBefore + text + contextAfter;
-          const patternIndex = nodeText.indexOf(searchPattern);
-
-          if (patternIndex !== -1) {
-            const textStartIndex = patternIndex + contextBefore.length;
-            const textEndIndex = textStartIndex + text.length;
-
-            // Split the text node and wrap the highlight
-            const before = nodeText.slice(0, textStartIndex);
-            const highlighted = nodeText.slice(textStartIndex, textEndIndex);
-            const after = nodeText.slice(textEndIndex);
-
-            const fragment = document.createDocumentFragment();
-            if (before) fragment.appendChild(document.createTextNode(before));
-
-            const span = document.createElement('span');
-            span.className = 'webster-user-highlight';
-            span.textContent = highlighted;
-            span.dataset.highlightId = id;
-            fragment.appendChild(span);
-
-            if (after) fragment.appendChild(document.createTextNode(after));
-
-            node.parentNode.replaceChild(fragment, node);
-            break; // Only highlight first match for this specific highlight
+        // Try new format first (textStart/textEnd)
+        if (textStart && textEnd) {
+          // Find where textStart begins and textEnd ends
+          const startIdx = fullText.indexOf(textStart);
+          if (startIdx !== -1) {
+            const expectedEnd = startIdx + text.length;
+            const actualEnd = fullText.indexOf(textEnd, startIdx);
+            if (actualEnd !== -1 && actualEnd + textEnd.length === expectedEnd + textEnd.length - textEnd.length + text.slice(-30).length) {
+              matchStart = startIdx;
+            } else {
+              matchStart = startIdx; // Fallback to just using textStart
+            }
           }
         }
+        // Fallback to old format (contextBefore/contextAfter)
+        else if (contextBefore !== undefined) {
+          const searchPattern = contextBefore + text + contextAfter;
+          const patternIndex = fullText.indexOf(searchPattern);
+          if (patternIndex !== -1) {
+            matchStart = patternIndex + contextBefore.length;
+          }
+        }
+
+        if (matchStart === -1) return; // Not found
+
+        const matchEnd = matchStart + text.length;
+
+        // Find which nodes are affected and wrap them
+        const affectedNodes = nodePositions.filter(
+          np => np.end > matchStart && np.start < matchEnd
+        );
+
+        // Process in reverse order to avoid position shifts
+        affectedNodes.reverse().forEach(np => {
+          const nodeStart = Math.max(0, matchStart - np.start);
+          const nodeEnd = Math.min(np.node.textContent.length, matchEnd - np.start);
+
+          if (nodeStart >= nodeEnd) return;
+
+          const beforeText = np.node.textContent.slice(0, nodeStart);
+          const highlightText = np.node.textContent.slice(nodeStart, nodeEnd);
+          const afterText = np.node.textContent.slice(nodeEnd);
+
+          const fragment = document.createDocumentFragment();
+          if (beforeText) fragment.appendChild(document.createTextNode(beforeText));
+
+          const span = document.createElement('span');
+          span.className = 'webster-user-highlight';
+          span.textContent = highlightText;
+          span.dataset.highlightId = id;
+          fragment.appendChild(span);
+
+          if (afterText) fragment.appendChild(document.createTextNode(afterText));
+
+          np.node.parentNode.replaceChild(fragment, np.node);
+        });
       });
     };
 
@@ -304,22 +345,68 @@ function WebsterLookup({ children, containerRef }) {
 
     if (!selection?.range) return;
 
-    // Get context around the selection for precise matching later
     const range = selection.range;
-    const textNode = range.startContainer;
-    const fullText = textNode.textContent || '';
-    const startOffset = range.startOffset;
-    const endOffset = range.endOffset;
+    const highlightId = generateHighlightId();
 
-    // Get some context before and after (up to 20 chars)
-    const contextBefore = fullText.slice(Math.max(0, startOffset - 20), startOffset);
-    const contextAfter = fullText.slice(endOffset, Math.min(fullText.length, endOffset + 20));
+    // Get all text nodes within the range
+    const getTextNodesInRange = (range) => {
+      const textNodes = [];
+      const walker = document.createTreeWalker(
+        range.commonAncestorContainer.nodeType === Node.TEXT_NODE
+          ? range.commonAncestorContainer.parentNode
+          : range.commonAncestorContainer,
+        NodeFilter.SHOW_TEXT,
+        null,
+        false
+      );
 
+      let node;
+      let inRange = false;
+      while ((node = walker.nextNode())) {
+        if (node === range.startContainer) inRange = true;
+        if (inRange) textNodes.push(node);
+        if (node === range.endContainer) break;
+      }
+      return textNodes;
+    };
+
+    const textNodes = getTextNodesInRange(range);
+
+    // Wrap each text node (or portion) in a highlight span
+    textNodes.forEach((node, index) => {
+      const isFirst = index === 0;
+      const isLast = index === textNodes.length - 1;
+      const isSingleNode = textNodes.length === 1;
+
+      let startOffset = isFirst ? range.startOffset : 0;
+      let endOffset = isLast ? range.endOffset : node.textContent.length;
+
+      if (startOffset === endOffset) return; // Skip empty selections
+
+      const beforeText = node.textContent.slice(0, startOffset);
+      const highlightText = node.textContent.slice(startOffset, endOffset);
+      const afterText = node.textContent.slice(endOffset);
+
+      const fragment = document.createDocumentFragment();
+      if (beforeText) fragment.appendChild(document.createTextNode(beforeText));
+
+      const span = document.createElement('span');
+      span.className = 'webster-user-highlight';
+      span.textContent = highlightText;
+      span.dataset.highlightId = highlightId;
+      fragment.appendChild(span);
+
+      if (afterText) fragment.appendChild(document.createTextNode(afterText));
+
+      node.parentNode.replaceChild(fragment, node);
+    });
+
+    // Store highlight info for persistence (use first 30 chars of text for matching)
     const newHighlight = {
-      id: generateHighlightId(),
+      id: highlightId,
       text: selection.raw,
-      contextBefore,
-      contextAfter
+      textStart: selection.raw.slice(0, 30),
+      textEnd: selection.raw.slice(-30)
     };
 
     const newHighlights = [...highlights, newHighlight];
