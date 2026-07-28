@@ -1,3 +1,10 @@
+/* Disable iOS native callout menu on selectable text */
+.webster-content {
+  -webkit-touch-callout: none;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 /* Button Group Container */
 .webster-btn-group {
   transform: translateX(-50%);

@@ -478,7 +478,9 @@ function WebsterLookup({ children, containerRef }) {
 
   return (
     <>
-      {children}
+      <div className="webster-content">
+        {children}
+      </div>
 
       {/* Lookup & Highlight Buttons - Fixed positioning */}
       {buttonPosition && selection && !definition && !loading && (
