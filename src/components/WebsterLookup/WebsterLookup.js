@@ -206,10 +206,13 @@ function WebsterLookup({ children, containerRef }) {
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (
-        popupRef.current && !popupRef.current.contains(e.target) &&
-        buttonRef.current && !buttonRef.current.contains(e.target)
-      ) {
+      // Check if click is outside the popup (if popup exists)
+      const isOutsidePopup = !popupRef.current || !popupRef.current.contains(e.target);
+      // Check if click is outside the buttons (if buttons exist)
+      const isOutsideButtons = !buttonRef.current || !buttonRef.current.contains(e.target);
+
+      // Close if clicking outside both popup and buttons
+      if (isOutsidePopup && isOutsideButtons) {
         setDefinition(null);
         setPopupPosition(null);
         setSelection(null);
