@@ -40,7 +40,7 @@
 
 /* User highlighted text in content - same color as native text selection */
 .webster-user-highlight {
-  background-color: rgba(255, 255, 0, 0.7);
+  background-color: rgba(255, 255, 0, 0.99);
   color: inherit;
   border-radius: 2px;
 }
