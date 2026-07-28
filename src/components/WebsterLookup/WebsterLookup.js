@@ -181,7 +181,7 @@ function WebsterLookup({ children, containerRef }) {
     const sel = window.getSelection();
     const text = sel?.toString().trim();
 
-    if (text && text.length > 0 && text.length < 100) {
+    if (text && text.length > 0 && text.length < 2000) {
       if (containerRef?.current) {
         try {
           const range = sel.getRangeAt(0);
