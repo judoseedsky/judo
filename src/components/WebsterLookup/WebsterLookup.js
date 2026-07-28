@@ -348,44 +348,65 @@ function WebsterLookup({ children, containerRef }) {
     const range = selection.range;
     const highlightId = generateHighlightId();
 
-    // Get all text nodes within the range
-    const getTextNodesInRange = (range) => {
-      const textNodes = [];
-      const walker = document.createTreeWalker(
-        range.commonAncestorContainer.nodeType === Node.TEXT_NODE
-          ? range.commonAncestorContainer.parentNode
-          : range.commonAncestorContainer,
-        NodeFilter.SHOW_TEXT,
-        null,
-        false
-      );
+    // Collect all text nodes and their offsets within the range
+    const collectTextNodesInRange = (range) => {
+      const result = [];
+      const startContainer = range.startContainer;
+      const endContainer = range.endContainer;
+      const startOffset = range.startOffset;
+      const endOffset = range.endOffset;
+
+      // If start and end are the same text node
+      if (startContainer === endContainer && startContainer.nodeType === Node.TEXT_NODE) {
+        result.push({
+          node: startContainer,
+          start: startOffset,
+          end: endOffset
+        });
+        return result;
+      }
+
+      // Get common ancestor and walk through all text nodes
+      const ancestor = range.commonAncestorContainer;
+      const root = ancestor.nodeType === Node.TEXT_NODE ? ancestor.parentNode : ancestor;
+
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
 
       let node;
-      let inRange = false;
-      while ((node = walker.nextNode())) {
-        if (node === range.startContainer) inRange = true;
-        if (inRange) textNodes.push(node);
-        if (node === range.endContainer) break;
+      let foundStart = false;
+      let foundEnd = false;
+
+      while ((node = walker.nextNode()) && !foundEnd) {
+        const isStartNode = node === startContainer;
+        const isEndNode = node === endContainer;
+
+        if (isStartNode) foundStart = true;
+
+        if (foundStart && !foundEnd) {
+          result.push({
+            node: node,
+            start: isStartNode ? startOffset : 0,
+            end: isEndNode ? endOffset : node.textContent.length
+          });
+        }
+
+        if (isEndNode) foundEnd = true;
       }
-      return textNodes;
+
+      return result;
     };
 
-    const textNodes = getTextNodesInRange(range);
+    const nodeInfos = collectTextNodesInRange(range);
 
-    // Wrap each text node (or portion) in a highlight span
-    textNodes.forEach((node, index) => {
-      const isFirst = index === 0;
-      const isLast = index === textNodes.length - 1;
-      const isSingleNode = textNodes.length === 1;
+    // Process in reverse order to avoid DOM position shifts
+    for (let i = nodeInfos.length - 1; i >= 0; i--) {
+      const { node, start, end } = nodeInfos[i];
 
-      let startOffset = isFirst ? range.startOffset : 0;
-      let endOffset = isLast ? range.endOffset : node.textContent.length;
+      if (start >= end || !node.parentNode) continue;
 
-      if (startOffset === endOffset) return; // Skip empty selections
-
-      const beforeText = node.textContent.slice(0, startOffset);
-      const highlightText = node.textContent.slice(startOffset, endOffset);
-      const afterText = node.textContent.slice(endOffset);
+      const beforeText = node.textContent.slice(0, start);
+      const highlightText = node.textContent.slice(start, end);
+      const afterText = node.textContent.slice(end);
 
       const fragment = document.createDocumentFragment();
       if (beforeText) fragment.appendChild(document.createTextNode(beforeText));
@@ -399,9 +420,9 @@ function WebsterLookup({ children, containerRef }) {
       if (afterText) fragment.appendChild(document.createTextNode(afterText));
 
       node.parentNode.replaceChild(fragment, node);
-    });
+    }
 
-    // Store highlight info for persistence (use first 30 chars of text for matching)
+    // Store highlight info for persistence
     const newHighlight = {
       id: highlightId,
       text: selection.raw,
